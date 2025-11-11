@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Video Debug</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .video-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 20px auto;
+            border: 2px solid white;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #info {
+            background: #333;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+        .warning { color: #ffd43b; }
+    </style>
+</head>
+<body>
+    <h1>Chrome Video Debug Test</h1>
+    <p>This page helps diagnose Chrome video issues</p>
+    
+    <div class="video-container">
+        <video id="testVideo" muted loop controls>
+            <source src="/videos/Coming_Soon_Video_Creation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    
+    <div class="controls">
+        <button onclick="testVideoLoad()">Test Video Load</button>
+        <button onclick="testAutoplay()">Test Autoplay</button>
+        <button onclick="forcePlay()">Force Play</button>
+        <button onclick="checkPolicies()">Check Browser Policies</button>
+        <button onclick="testDifferentFormat()">Test Different Approach</button>
+    </div>
+    
+    <div id="info">
+        <h3>Browser Information:</h3>
+        <p>User Agent: <span id="userAgent"></span></p>
+        <p>Current URL: <span id="currentUrl"></span></p>
+    </div>
+    
+    <script>
+        const video = document.getElementById('testVideo');
+        const info = document.getElementById('info');
+        
+        // Initialize
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        document.getElementById('currentUrl').textContent = window.location.href;
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : '';
+            info.innerHTML += `<p class="${className}">[${timestamp}] ${message}</p>`;
+            console.log(`[${timestamp}] ${message}`);
+        }
+        
+        function testVideoLoad() {
+            log('🔄 Testing video load...');
+            
+            video.load();
+            
+            setTimeout(() => {
+                log(`📊 Video ready state: ${video.readyState} (0=HAVE_NOTHING, 1=HAVE_METADATA, 2=HAVE_CURRENT_DATA, 3=HAVE_FUTURE_DATA, 4=HAVE_ENOUGH_DATA)`);
+                log(`🌐 Network state: ${video.networkState} (0=EMPTY, 1=IDLE, 2=LOADING, 3=NO_SOURCE)`);
+                log(`📏 Video dimensions: ${video.videoWidth}x${video.videoHeight}`);
+                log(`⏱️ Duration: ${video.duration}`);
+                log(`🔗 Current source: ${video.currentSrc}`);
+                
+                if (video.error) {
+                    log(`❌ Video error: ${video.error.code} - ${video.error.message}`, 'error');
+                } else {
+                    log('✅ No video errors detected', 'success');
+                }
+            }, 2000);
+        }
+        
+        function testAutoplay() {
+            log('🎬 Testing autoplay policies...');
+            
+            if ('getAutoplayPolicy' in navigator) {
+                // Chrome's autoplay policy API
+                const policy = navigator.getAutoplayPolicy('mediaelement');
+                log(`🔒 Autoplay policy: ${policy}`, policy === 'allowed' ? 'success' : 'warning');
+            } else {
+                log('ℹ️ Autoplay policy API not available');
+            }
+            
+            // Test autoplay with different configurations
+            const testVideo = document.createElement('video');
+            testVideo.muted = true;
+            testVideo.src = '/videos/Coming_Soon_Video_Creation.mp4';
+            
+            testVideo.play().then(() => {
+                log('✅ Autoplay successful with muted video', 'success');
+                testVideo.remove();
+            }).catch(err => {
+                log(`❌ Autoplay failed: ${err.name} - ${err.message}`, 'error');
+                testVideo.remove();
+            });
+        }
+        
+        function forcePlay() {
+            log('▶️ Attempting to force play...');
+            
+            video.muted = true; // Ensure muted for autoplay
+            video.play().then(() => {
+                log('✅ Force play successful!', 'success');
+            }).catch(err => {
+                log(`❌ Force play failed: ${err.name} - ${err.message}`, 'error');
+                
+                // Try with user interaction
+                document.addEventListener('click', function playOnClick() {
+                    video.play().then(() => {
+                        log('✅ Play successful after user interaction!', 'success');
+                        document.removeEventListener('click', playOnClick);
+                    }).catch(err2 => {
+                        log(`❌ Play failed even after user interaction: ${err2.message}`, 'error');
+                    });
+                }, { once: true });
+                
+                log('👆 Click anywhere to try playing with user interaction', 'warning');
+            });
+        }
+        
+        function checkPolicies() {
+            log('🔍 Checking browser policies and features...');
+            
+            // Check for HTTPS
+            if (location.protocol === 'https:') {
+                log('✅ Running on HTTPS', 'success');
+            } else {
+                log('⚠️ Running on HTTP - this may cause autoplay issues', 'warning');
+            }
+            
+            // Check for localhost
+            if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                log('✅ Running on localhost - should allow autoplay', 'success');
+            } else {
+                log('⚠️ Not running on localhost - may have stricter policies', 'warning');
+            }
+            
+            // Check video support
+            const canPlayMP4 = video.canPlayType('video/mp4');
+            log(`📹 MP4 support: ${canPlayMP4 || 'unknown'}`, canPlayMP4 ? 'success' : 'error');
+            
+            // Check for media feature policy
+            if ('featurePolicy' in document) {
+                try {
+                    const autoplayAllowed = document.featurePolicy.allowsFeature('autoplay');
+                    log(`🎭 Feature Policy autoplay: ${autoplayAllowed}`, autoplayAllowed ? 'success' : 'warning');
+                } catch (e) {
+                    log('ℹ️ Could not check feature policy');
+                }
+            }
+        }
+        
+        function testDifferentFormat() {
+            log('🔄 Testing with data URL approach...');
+            
+            // Try to load video as blob/data URL to bypass some restrictions
+            fetch('/videos/Coming_Soon_Video_Creation.mp4')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    log(`✅ Successfully fetched video blob (${blob.size} bytes)`, 'success');
+                    const url = URL.createObjectURL(blob);
+                    
+                    const blobVideo = document.createElement('video');
+                    blobVideo.src = url;
+                    blobVideo.muted = true;
+                    blobVideo.loop = true;
+                    blobVideo.style.width = '200px';
+                    blobVideo.style.height = '200px';
+                    blobVideo.style.objectFit = 'cover';
+                    blobVideo.controls = true;
+                    
+                    const container = document.createElement('div');
+                    container.innerHTML = '<h4>Blob Video Test:</h4>';
+                    container.appendChild(blobVideo);
+                    info.appendChild(container);
+                    
+                    blobVideo.load();
+                    blobVideo.play().then(() => {
+                        log('✅ Blob video playing successfully!', 'success');
+                    }).catch(err => {
+                        log(`❌ Blob video failed: ${err.message}`, 'error');
+                    });
+                })
+                .catch(err => {
+                    log(`❌ Failed to fetch video: ${err.message}`, 'error');
+                });
+        }
+        
+        // Auto-run basic checks
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testVideoLoad();
+                checkPolicies();
+            }, 1000);
+        });
+        
+        // Listen for video events
+        video.addEventListener('loadstart', () => log('📥 Video load started'));
+        video.addEventListener('loadedmetadata', () => log('📊 Video metadata loaded'));
+        video.addEventListener('loadeddata', () => log('📁 Video data loaded'));
+        video.addEventListener('canplay', () => log('▶️ Video can play'));
+        video.addEventListener('canplaythrough', () => log('⏩ Video can play through'));
+        video.addEventListener('playing', () => log('🎬 Video is playing'));
+        video.addEventListener('pause', () => log('⏸️ Video paused'));
+        video.addEventListener('error', (e) => log(`💥 Video error: ${e.message || 'Unknown error'}`, 'error'));
+    </script>
+</body>
+</html>

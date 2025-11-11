@@ -1,0 +1,5 @@
+export { default as Test } from './Test'
+export { default as Experiences } from './Experiences'
+export { default as HowItWorks } from './HowItWorks'
+export { default as AboutUs } from './AboutUs'
+export { default as ContactUs } from './ContactUs'

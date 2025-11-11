@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .video-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 20px auto;
+            border: 2px solid white;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Test Page</h1>
+    <div class="video-container">
+        <video id="testVideo" muted loop>
+            <source src="/videos/Coming_Soon_Video_Creation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    
+    <div class="controls">
+        <button onclick="playVideo()">Play Video</button>
+        <button onclick="pauseVideo()">Pause Video</button>
+        <button onclick="checkVideoInfo()">Check Video Info</button>
+    </div>
+    
+    <div id="info"></div>
+    
+    <script>
+        const video = document.getElementById('testVideo');
+        const info = document.getElementById('info');
+        
+        function playVideo() {
+            video.play().then(() => {
+                info.innerHTML += '<p>✅ Video playing successfully</p>';
+            }).catch(err => {
+                info.innerHTML += `<p>❌ Play failed: ${err.message}</p>`;
+            });
+        }
+        
+        function pauseVideo() {
+            video.pause();
+            info.innerHTML += '<p>⏸️ Video paused</p>';
+        }
+        
+        function checkVideoInfo() {
+            info.innerHTML = `
+                <h3>Video Information:</h3>
+                <p>Ready State: ${video.readyState}</p>
+                <p>Network State: ${video.networkState}</p>
+                <p>Current Time: ${video.currentTime}</p>
+                <p>Duration: ${video.duration}</p>
+                <p>Paused: ${video.paused}</p>
+                <p>Muted: ${video.muted}</p>
+                <p>Video Width: ${video.videoWidth}</p>
+                <p>Video Height: ${video.videoHeight}</p>
+                <p>Source: ${video.currentSrc}</p>
+            `;
+        }
+        
+        // Auto-check on load
+        video.addEventListener('loadedmetadata', () => {
+            info.innerHTML += '<p>📊 Video metadata loaded</p>';
+            checkVideoInfo();
+        });
+        
+        video.addEventListener('canplay', () => {
+            info.innerHTML += '<p>▶️ Video can play</p>';
+        });
+        
+        video.addEventListener('error', (e) => {
+            info.innerHTML += `<p>💥 Video error: ${e.message || 'Unknown error'}</p>`;
+        });
+    </script>
+</body>
+</html>
