@@ -17,6 +17,13 @@ import {
 } from 'lucide-react'
 import { Header, Footer } from '../components'
 
+// Import images
+import eduEngagement from '../assets/edu-engagement.jpg'
+import hrEngagement from '../assets/hr-engagement.jpg'
+import conference from '../assets/conference.jpg'
+import cityAdventure from '../assets/city-adventure.jpg'
+import teamBuilding from '../assets/team-building.jpg'
+
 export default function Test() {
     const navigate = useNavigate()
     const [isNavExpanded, setIsNavExpanded] = useState(true)
@@ -85,35 +92,35 @@ export default function Test() {
             title: "EDU Engagement",
             subtitle: "Colleges, Campus Life",
             description: "Engaging, high-energy events that build campus spirit, inspire students, and create lasting connections through memorable activities and experiences.",
-            image: "/src/assets/edu-engagement.jpg"
+            image: eduEngagement
         },
         {
             icon: <Building2 className="w-8 h-8 text-[#004D43]" />,
             title: "HR & Employee Engagement",
             subtitle: "Workplace Culture",
             description: "Tailored events that strengthen workplace culture, boost morale, and connect employees to your company's mission in meaningful ways.",
-            image: "/src/assets/hr-engagement.jpg"
+            image: hrEngagement
         },
         {
             icon: <Presentation className="w-8 h-8 text-[#004D43]" />,
             title: "Conferences & Trade Shows",
             subtitle: "Immersive Branding",
             description: "Immersive, branded environments that captivate audiences, encourage networking, and deliver measurable event impact.",
-            image: "/src/assets/conference.jpg"
+            image: conference
         },
         {
             icon: <MapPin className="w-8 h-8 text-[#004D43]" />,
             title: "Metropolitan Adventures",
             subtitle: "City-Based Experiences",
             description: "Curated city-based experiences blending exploration, culture, and fun perfect for teams, clients, and group bonding.",
-            image: "/src/assets/city-adventure.jpg"
+            image: cityAdventure
         },
         {
             icon: <Target className="w-8 h-8 text-[#004D43]" />,
             title: "Team Building",
             subtitle: "Dynamic Programs",
             description: "Dynamic, goal-driven programs that enhance collaboration, trust, and communication through shared challenges and successes.",
-            image: "/src/assets/team-building.jpg"
+            image: teamBuilding
         }
     ]
 
