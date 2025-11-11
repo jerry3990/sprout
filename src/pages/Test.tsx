@@ -85,35 +85,35 @@ export default function Test() {
             title: "EDU Engagement",
             subtitle: "Colleges, Campus Life",
             description: "Engaging, high-energy events that build campus spirit, inspire students, and create lasting connections through memorable activities and experiences.",
-            image: "/api/placeholder/400/300"
+            image: "/src/assets/edu-engagement.jpg"
         },
         {
             icon: <Building2 className="w-8 h-8 text-[#004D43]" />,
             title: "HR & Employee Engagement",
             subtitle: "Workplace Culture",
             description: "Tailored events that strengthen workplace culture, boost morale, and connect employees to your company's mission in meaningful ways.",
-            image: "/api/placeholder/400/300"
+            image: "/src/assets/hr-engagement.jpg"
         },
         {
             icon: <Presentation className="w-8 h-8 text-[#004D43]" />,
             title: "Conferences & Trade Shows",
             subtitle: "Immersive Branding",
             description: "Immersive, branded environments that captivate audiences, encourage networking, and deliver measurable event impact.",
-            image: "/api/placeholder/400/300"
+            image: "/src/assets/conference.jpg"
         },
         {
             icon: <MapPin className="w-8 h-8 text-[#004D43]" />,
             title: "Metropolitan Adventures",
             subtitle: "City-Based Experiences",
             description: "Curated city-based experiences blending exploration, culture, and fun perfect for teams, clients, and group bonding.",
-            image: "/api/placeholder/400/300"
+            image: "/src/assets/city-adventure.jpg"
         },
         {
             icon: <Target className="w-8 h-8 text-[#004D43]" />,
             title: "Team Building",
             subtitle: "Dynamic Programs",
             description: "Dynamic, goal-driven programs that enhance collaboration, trust, and communication through shared challenges and successes.",
-            image: "/api/placeholder/400/300"
+            image: "/src/assets/team-building.jpg"
         }
     ]
 
@@ -280,18 +280,17 @@ export default function Test() {
                                     onClick={() => navigate('/experiences')}
                                 >
                                     <div className="bg-[#FAF9F6] rounded-3xl overflow-hidden elegant-shadow group-hover:elegant-shadow-hover transition-all duration-500 glass-reflection h-full">
-                                        <div className="relative h-48 bg-gradient-to-br from-[#F9E6CF] via-[#C2B280]/20 to-[#004D43]/10 flex items-center justify-center group-hover:from-[#C2B280]/30 group-hover:to-[#004D43]/20 transition-all duration-500">
-                                            <motion.div
-                                                className="text-6xl opacity-30 text-[#004D43] group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"
-                                                whileHover={{ rotate: 5 }}
-                                            >
-                                                {arena.icon}
-                                            </motion.div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent group-hover:from-black/20 transition-all duration-500"></div>
+                                        <div className="relative h-48 overflow-hidden">
+                                            <img
+                                                src={arena.image}
+                                                alt={arena.title}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent group-hover:from-black/50 transition-all duration-500"></div>
 
                                             {/* Floating particles effect */}
                                             <div className="absolute top-4 right-4 w-2 h-2 bg-[#C2B280] rounded-full animate-smooth-bounce opacity-60"></div>
-                                            <div className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-[#004D43] rounded-full animate-smooth-bounce opacity-40" style={{ animationDelay: '0.5s' }}></div>
+                                            <div className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-white rounded-full animate-smooth-bounce opacity-60" style={{ animationDelay: '0.5s' }}></div>
                                         </div>
 
                                         <div className="p-8">

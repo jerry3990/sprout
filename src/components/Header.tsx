@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import logoBlank from '../assets/logoblank.png'
 
 interface HeaderProps {
     isNavExpanded: boolean
@@ -93,7 +94,7 @@ export default function Header({ isNavExpanded }: HeaderProps) {
                     onClick={() => navigate('/')}
                 >
                     <motion.img
-                        src="src/assets/logoblank.png"
+                        src={logoBlank}
                         className="object-contain"
                         alt="The Sprout Logo"
                         style={{
